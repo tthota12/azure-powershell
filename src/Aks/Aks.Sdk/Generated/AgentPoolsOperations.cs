@@ -5,6 +5,8 @@
 
 namespace Microsoft.Azure.Management.ContainerService
 {
+
+    
     using System.Linq;
     using Microsoft.Rest;
     using Microsoft.Rest.Azure;
