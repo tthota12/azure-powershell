@@ -61,12 +61,13 @@ try {
         return
     }
     Write-Host "Preparing Autorest..."
-    node -v
-    npm -v
+    Write-Host (node -v)
+    Write-Host (npm -v)
+    Write-Host (npm ls -g)
     Write-Host (get-item env:Path).value
-    where.exe autorest
+    Write-Host (where.exe autorest)
     npm install -g autorest@latest
-    where.exe autorest
+    Write-Host (where.exe autorest)
     autorest --reset
     foreach ($_ in $ChangedSdks) {
         # Extract Module Name
