@@ -78,8 +78,8 @@ try {
         # Regenerate the Sdk under Generated folder
         if( Test-Path -Path "README.md" -PathType Leaf){
             Write-Host "Re-generating SDK under Generated folder for $ModuleName..."
-            npx autorest --use:@microsoft.azure/autorest.csharp@2.3.90
-            npx autorest README.md --version=v2
+            npx autorest --use:@microsoft.azure/autorest.csharp@2.3.90 --max-old-space-size=65536
+            npx autorest README.md --version=v2 --max-old-space-size=65536
         }
         else {
             $ExceptionList += [GeneratedSdkIssue]@{
