@@ -61,14 +61,7 @@ try {
         return
     }
     Write-Host "Preparing Autorest..."
-    Write-Host (node -v)
-    Write-Host (npm -v)
-    Write-Host (npm ls -g)
-    Write-Host (get-item env:Path).value
-    Write-Host (where.exe autorest)
-    npm install -g autorest@latest
-    Write-Host (where.exe autorest)
-    autorest --reset
+    npx autorest --reset
     foreach ($_ in $ChangedSdks) {
         # Extract Module Name
         $ModuleName = "Az." + ($_ -split "\/|\\")[1]
@@ -85,8 +78,8 @@ try {
         # Regenerate the Sdk under Generated folder
         if( Test-Path -Path "README.md" -PathType Leaf){
             Write-Host "Re-generating SDK under Generated folder for $ModuleName..."
-            autorest --use:@microsoft.azure/autorest.csharp@2.3.90
-            autorest README.md --version=v2
+            npx autorest --use:@microsoft.azure/autorest.csharp@2.3.90
+            npx autorest README.md --version=v2
         }
         else {
             $ExceptionList += [GeneratedSdkIssue]@{
