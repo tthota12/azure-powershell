@@ -15,7 +15,7 @@ steps:
     versionSpec: '14.17.1'
     command: custom
     verbose: false
-    customCommand: install autorest@latest
+    customCommand: install -g autorest@latest
 - task: PowerShell@2
   displayName: Setup environment for autorest
   inputs:
