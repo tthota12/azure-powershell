@@ -44,6 +44,7 @@ $skipModules = @(
 
 $MissReadMe = 9000
 $GenSdkChanged = 9090
+try {
     if ((Test-Path $FilesChangedPaths -PathType Leaf) -and $FilesChangedPaths.EndsWith(".txt")) {
         # Read Changedfiles and check if generted sdk code is updated.
         $FilesChanged = Get-Content $FilesChangedPaths | Where-Object { ($_ -match "^src\/.*\.Sdk\/.*Generated.*")}
@@ -60,6 +61,12 @@ $GenSdkChanged = 9090
         return
     }
     Write-Host "Preparing Autorest..."
+    node -v
+    npm -v
+    Write-Host (get-item env:Path).value
+    where.exe autorest
+    npm install -g autorest@latest
+    where.exe autorest
     autorest --reset
     foreach ($_ in $ChangedSdks) {
         # Extract Module Name
@@ -113,3 +120,22 @@ $GenSdkChanged = 9090
         }
         Set-Location $SavePath
     }
+}
+catch {
+    Write-Host "Caught an error."
+}
+finally {
+    Write-Host ""
+    Write-Host "Summary:"
+    Write-Host ""
+    Write-Host "  $($ExceptionList.Length) error(s) detected while verifying generated sdk:"
+    Write-Host ""
+
+    # foreach ($err in $ExceptionList) {
+    #     Write-Host "error : " $err.Description "`n " $err.Remediation
+    # }
+
+    if ($ExceptionList.Length -ne 0) {
+        $ExceptionList | Sort-Object -Unique -Property Module,Sdk,Description | Export-Csv $ExceptionFilePath -NoTypeInformation
+    }
+}
