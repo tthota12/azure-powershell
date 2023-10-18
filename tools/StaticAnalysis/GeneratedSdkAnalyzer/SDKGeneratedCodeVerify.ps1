@@ -61,6 +61,7 @@ try{
         return
     }
     Write-Host "Preparing Autorest..."
+    npm install -g autorest@latest
     autorest --reset
     foreach ($_ in $ChangedSdks) {
         # Extract Module Name
