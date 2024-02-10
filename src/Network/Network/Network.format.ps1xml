@@ -3658,6 +3658,10 @@
                 <Label>AuthorizationStatus</Label>
                 <PropertyName>AuthorizationStatus</PropertyName>
               </ListItem>
+			  <ListItem>
+                <Label>EnableDirectPortRateLimit</Label>
+                <PropertyName>EnableDirectPortRateLimit</PropertyName>
+              </ListItem>
             </ListItems>
           </ListEntry>
         </ListEntries>

@@ -27,7 +27,7 @@ New-AzExpressRouteCircuit -Name <String> -ResourceGroupName <String> -Location <
 New-AzExpressRouteCircuit -Name <String> -ResourceGroupName <String> -Location <String> [-SkuTier <String>]
  [-SkuFamily <String>] -ExpressRoutePort <PSExpressRoutePort> -BandwidthInGbps <Double>
  [-AuthorizationKey <String>] [-Peering <PSPeering[]>] [-Authorization <PSExpressRouteCircuitAuthorization[]>]
- [-AllowClassicOperations <Boolean>] [-Tag <Hashtable>] [-Force] [-AsJob]
+ [-AllowClassicOperations <Boolean>] [-EnableDirectPortRateLimit <Boolean>] [-Tag <Hashtable>] [-Force] [-AsJob]
  [-DefaultProfile <IAzureContextContainer>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
@@ -170,6 +170,22 @@ Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EnableDirectPortRateLimit
+The use of this parameter allows you to use the classic Azure PowerShell cmdlets to manage the
+rate-limiting of the ExpressRoute port direct circuit. 
+
+```yaml
+Type: System.Nullable`1[System.Boolean]
+Parameter Sets: ExpressRoutePort
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
