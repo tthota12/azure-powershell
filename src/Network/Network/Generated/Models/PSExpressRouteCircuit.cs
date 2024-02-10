@@ -64,7 +64,8 @@ namespace Microsoft.Azure.Commands.Network.Models
         public string AuthorizationKey { get; set; }
         [Ps1Xml(Target = ViewControl.Table)]
         public string AuthorizationStatus { get; set; }
-
+        [Ps1Xml(Target = ViewControl.Table)]
+        public bool? EnableDirectPortRateLimit { get; set; }
         [JsonIgnore]
         public string SkuText
         {

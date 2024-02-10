@@ -127,6 +127,12 @@ namespace Microsoft.Azure.Commands.Network
         [ValidateNotNullOrEmpty]
         public bool? AllowClassicOperations { get; set; }
 
+        [Parameter(
+           ParameterSetName = "ExpressRoutePort",
+           Mandatory = false,
+           ValueFromPipelineByPropertyName = true)]
+        [ValidateNotNullOrEmpty]
+        public bool? EnableDirectPortRateLimit { get; set; }
 
         [Parameter(
             Mandatory = false,
@@ -190,6 +196,7 @@ namespace Microsoft.Azure.Commands.Network
             {
                 circuit.ExpressRoutePort = this.ExpressRoutePort;
                 circuit.BandwidthInGbps = this.BandwidthInGbps;
+                circuit.EnableDirectPortRateLimit = this.EnableDirectPortRateLimit;
             }
 
             circuit.Peerings = this.Peering?.ToList();
