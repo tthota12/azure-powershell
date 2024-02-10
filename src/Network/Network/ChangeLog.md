@@ -19,6 +19,9 @@
 --->
 
 ## Upcoming Release
+* Updated cmdlet to support rate-limiting feature on Expressroute direct-port circuit on circuit creation and update.
+    - `New-AzExpressRouteCircuit`
+    - `Set-AzExpressRouteCircuit`
 
 ## Version 7.4.0
 * Fixed a few minor issues
