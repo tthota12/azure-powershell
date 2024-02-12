@@ -108,6 +108,103 @@ function Test-ExpressRoutePortCRUD
 
 <#
 .SYNOPSIS
+Tests ExpressRoutePortCircuitCRUD.
+#>
+function Test-ExpressRoutePortCircuitCRUD
+{
+    try
+    {
+        # Setup
+        $rgname = Get-ResourceGroupName
+        $rglocation = Get-ProviderLocation ResourceManagement
+        $rname = Get-ResourceName
+        $circuitName = Get-ResourceName
+	    $resourceTypeParent = "Microsoft.Network/expressRoutePorts"
+        $location = Get-ProviderLocation $resourceTypeParent
+	    $peeringLocation = "Cheyenne-ERDirect"
+	    $encapsulation = "QinQ"
+	    $bandwidthInGbps = 100.0
+
+        $resourceGroup = New-AzResourceGroup -Name $rgname -Location $rglocation
+
+        # Create ExpressRoutePort
+        $vExpressRoutePort = New-AzExpressRoutePort -ResourceGroupName $rgname -Name $rname -Location $location -PeeringLocation $peeringLocation -Encapsulation $encapsulation -BandwidthInGbps $bandwidthInGbps
+        Assert-NotNull $vExpressRoutePort
+        Assert-True { Check-CmdletReturnType "New-AzExpressRoutePort" $vExpressRoutePort }
+        Assert-NotNull $vExpressRoutePort.Links
+        Assert-True { $vExpressRoutePort.Links.Count -eq 2 }
+        Assert-AreEqual $rname $vExpressRoutePort.Name
+
+        # Get ExpressRoutePort
+        $vExpressRoutePort = Get-AzureRmExpressRoutePort -ResourceId $vExpressRoutePort.Id
+        Assert-NotNull $vExpressRoutePort
+        Assert-True { Check-CmdletReturnType "Get-AzureRmExpressRoutePort" $vExpressRoutePort }
+        Assert-AreEqual $rname $vExpressRoutePort.Name
+
+        # Update ExpressRoutePort
+		$vExpressRoutePort.Links[0].AdminState = "Enabled"
+		Set-AzExpressRoutePort -ExpressRoutePort $vExpressRoutePort
+
+		# Get ExpressRouteLink
+		$vExpressRouteLink = $vExpressRoutePort | Get-AzExpressRoutePortLinkConfig -Name "Link1"
+		Assert-NotNull $vExpressRouteLink;
+		Assert-AreEqual $vExpressRouteLink.AdminState "Enabled"
+
+        # Create the ExpressRouteCircuit
+        $circuit = New-AzExpressRouteCircuit -Name $circuitName -ResourceGroupName rgname -ExpressRoutePort $vExpressRoutePort -BandwidthinGbps 10.0  -Location $location -SkuTier Premium -SkuFamily MeteredData;
+
+        # get Circuit
+        $getCircuit = Get-AzExpressRouteCircuit -Name $circuitName -ResourceGroupName $rgname
+
+        #verification
+        Assert-AreEqual $rgName $getCircuit.ResourceGroupName
+        Assert-AreEqual $circuitName $getCircuit.Name
+        Assert-NotNull $getCircuit.Location
+        Assert-NotNull $getCircuit.Etag
+        Assert-AreEqual 0 @($getCircuit.Peerings).Count
+        Assert-AreEqual "Premium_MeteredData" $getCircuit.Sku.Name
+        Assert-AreEqual "Premium" $getCircuit.Sku.Tier
+        Assert-AreEqual "MeteredData" $getCircuit.Sku.Family
+        Assert-AreEqual "10" $getCircuit.BandwidthinGbps
+        Assert-AreEqual False $getCircuit.EnableDirectPortRateLimit
+
+        # set
+        $getCircuit.EnableDirectPortRateLimit = True
+
+        $job = Set-AzExpressRouteCircuit -ExpressRouteCircuit $getCircuit -AsJob
+        $job | Wait-Job
+        $getCircuit = $job | Receive-Job
+        Assert-AreEqual $rgName $getCircuit.ResourceGroupName
+        Assert-AreEqual $circuitName $getCircuit.Name
+        Assert-NotNull $getCircuit.Location
+        Assert-NotNull $getCircuit.Etag
+        Assert-AreEqual 0 @($getCircuit.Peerings).Count
+        Assert-AreEqual "Premium_MeteredData" $getCircuit.Sku.Name
+        Assert-AreEqual "Premium" $getCircuit.Sku.Tier
+        Assert-AreEqual "MeteredData" $getCircuit.Sku.Family
+        Assert-AreEqual "10" $getCircuit.BandwidthinGbps
+        Assert-AreEqual True $getCircuit.EnableDirectPortRateLimit
+
+        # Delete Circuit
+        $delete = Remove-AzExpressRouteCircuit -ResourceGroupName $rgname -name $circuitName -PassThru -Force
+        Assert-AreEqual true $delete
+
+        $list = Get-AzExpressRouteCircuit -ResourceGroupName $rgname
+        Assert-AreEqual 0 @($list).Count
+
+        # Remove ExpressRoutePort
+        $removeExpressRoutePort = Remove-AzExpressRoutePort -ResourceGroupName $rgname -Name $rname -PassThru -Force
+        Assert-AreEqual $true $removeExpressRoutePort
+    }
+    finally
+    {
+        # Cleanup
+        Clean-ResourceGroup $rgname
+    }
+}
+
+<#
+.SYNOPSIS
 Test creating new ExpressRoutePortIdentityCRUD
 #>
 function Test-ExpressRoutePortIdentityCRUD

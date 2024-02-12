@@ -36,6 +36,14 @@ namespace Commands.Network.Test.ScenarioTests
         [Fact(Skip = "No bandwidth available")]
         [Trait(Category.AcceptanceType, Category.CheckIn)]
         [Trait(Category.Owner, NrpTeamAlias.exrdev)]
+        public void TestExpressRoutePortCircuitCRUDMinimalParameters()
+        {
+            TestRunner.RunTestScript(string.Format("Test-ExpressRoutePortCircuitCRUD"));
+        }
+
+        [Fact(Skip = "No bandwidth available")]
+        [Trait(Category.AcceptanceType, Category.CheckIn)]
+        [Trait(Category.Owner, NrpTeamAlias.exrdev)]
         public void TestExpressRoutePortIdentityCRUD()
         {
             TestRunner.RunTestScript("Test-ExpressRoutePortIdentityCRUD");
